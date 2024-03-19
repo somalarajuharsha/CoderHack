@@ -37,6 +37,7 @@ public class CoderHackController {
     public ResponseEntity getByUserId(@RequestParam String param) {
         return null;
     }
+    
 
     @PostMapping("/users")
     public ResponseEntity postRequest(@RequestBody User user) {
