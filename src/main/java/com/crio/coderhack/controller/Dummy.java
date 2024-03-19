@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class Dummy {
-    @GetMapping("check")
+    @GetMapping("/check")
     public String getMethodName() {
         return "Working Good!";
     }
