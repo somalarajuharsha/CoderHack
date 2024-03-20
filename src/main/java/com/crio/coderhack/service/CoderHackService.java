@@ -1,20 +1,23 @@
 package com.crio.coderhack.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import com.crio.coderhack.entity.User;
-import com.crio.coderhack.repository.CoderHackRepository;
-import java.util.*;
 
-@Service
-public class CoderHackService {
+public interface CoderHackService {
 
-    @Autowired
-    private CoderHackRepository coderHackRepository;
+    List<User> findAllUsers();
 
-    public List<User> findAllUsers(){
-        List<User> result=coderHackRepository.findAll();
-        return result;
-    }
+    User findByUserId(String userId);
+
+    boolean validate(User user);
+
+    User registerUser(User user);
+
+    boolean validateScore(Integer score);
+
+    User updateUser(String id, Integer score);
+
+    void deregisterUser(String id);
+    
 }

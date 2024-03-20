@@ -8,5 +8,4 @@ import com.crio.coderhack.entity.User;
 
 @Repository
 public interface CoderHackRepository extends MongoRepository<User,String>{
-    
 }

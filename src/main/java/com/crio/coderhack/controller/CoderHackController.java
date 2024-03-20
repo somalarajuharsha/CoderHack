@@ -4,11 +4,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crio.coderhack.entity.User;
 import com.crio.coderhack.service.CoderHackService;
+import com.crio.coderhack.service.CoderHackServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-
-
 
 @RestController
 public class CoderHackController {
@@ -34,26 +34,47 @@ public class CoderHackController {
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity getByUserId(@RequestParam String param) {
-        return null;
+    public ResponseEntity<User> getByUserId(@PathVariable(value = "userId") String userId) {
+        User response=coderHackService.findByUserId(userId);
+        if(response==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok().body(response);
     }
-    
+
 
     @PostMapping("/users")
-    public ResponseEntity postRequest(@RequestBody User user) {
-        return null;
+    public ResponseEntity<User> postRequest(@RequestBody User user) {
+        if(coderHackService.validate(user)==false){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        User response=coderHackService.registerUser(user);
+        if(response==null){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return ResponseEntity.ok().body(response);
     }
     
-    @PutMapping("users/{useId}")
-    public ResponseEntity putById(@PathVariable String id, @RequestBody String entity) {
-        //TODO: process PUT request
-        
-        return null;
+    @PutMapping("users/{userId}")
+    public ResponseEntity<User> putById(@PathVariable(value = "userId") String id, @RequestBody User user) {
+        if(coderHackService.validateScore(user.getScore())==false){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        User response=coderHackService.updateUser(id, user.getScore());
+        if(response==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok().body(response);
     }
     
-    @DeleteMapping("users/{useId}")
-    public ResponseEntity deleteById(@PathVariable String id) {
-        return null;
+    @DeleteMapping("users/{userId}")
+    public ResponseEntity<String> deleteById(@PathVariable(value = "userId") String id) {
+        User response=coderHackService.findByUserId(id);
+        if(response==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        coderHackService.deregisterUser(id);
+        return ResponseEntity.ok().body("User Deleted Successfully");
     }
     
     
